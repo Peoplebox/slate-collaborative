@@ -52,10 +52,12 @@ const withSocketIO = <T extends AutomergeEditor>(
   e.connect = () => {
     if (!e.socket) {
       //e.socket = io(url, { ...connectOpts })
-      e.socket = socket
-      e.clientId = e.socket.id
-      e.openConnection()
-      onConnect && onConnect()
+      if (socket) {
+        e.socket = socket
+        e.clientId = e.socket.id
+        e.openConnection()
+        onConnect && onConnect()
+      }
 
       // e.socket.on('connect', () => {
       //   e.clientId = e.socket.id
