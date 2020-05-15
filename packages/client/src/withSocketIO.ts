@@ -53,14 +53,17 @@ const withSocketIO = <T extends AutomergeEditor>(
     if (!e.socket) {
       //e.socket = io(url, { ...connectOpts })
       e.socket = socket
+      e.clientId = e.socket.id
+      e.openConnection()
+      onConnect && onConnect()
 
-      e.socket.on('connect', () => {
-        e.clientId = e.socket.id
+      // e.socket.on('connect', () => {
+      //   e.clientId = e.socket.id
 
-        e.openConnection()
+      //   e.openConnection()
 
-        onConnect && onConnect()
-      })
+      //   onConnect && onConnect()
+      // })
     }
 
     e.socket.on('msg', (data: CollabAction) => {
