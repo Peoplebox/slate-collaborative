@@ -8,6 +8,7 @@ export interface SocketIOPluginOptions {
   url: string
   connectOpts: SocketIOClient.ConnectOpts
   autoConnect?: boolean
+  socket: any
 
   onConnect?: () => void
   onDisconnect?: () => void
@@ -35,7 +36,14 @@ const withSocketIO = <T extends AutomergeEditor>(
 ) => {
   const e = editor as T & WithSocketIOEditor
 
-  const { onConnect, onDisconnect, connectOpts, url, autoConnect } = options
+  const {
+    onConnect,
+    onDisconnect,
+    connectOpts,
+    url,
+    autoConnect,
+    socket
+  } = options
 
   /**
    * Connect to Socket.
@@ -43,7 +51,8 @@ const withSocketIO = <T extends AutomergeEditor>(
 
   e.connect = () => {
     if (!e.socket) {
-      e.socket = io(url, { ...connectOpts })
+      //e.socket = io(url, { ...connectOpts })
+      e.socket = socket
 
       e.socket.on('connect', () => {
         e.clientId = e.socket.id
@@ -61,7 +70,7 @@ const withSocketIO = <T extends AutomergeEditor>(
     e.socket.on('disconnect', () => {
       e.gabageCursor()
 
-      onDisconnect && onDisconnect()
+      //onDisconnect && onDisconnect()
     })
 
     e.socket.connect()
@@ -76,9 +85,9 @@ const withSocketIO = <T extends AutomergeEditor>(
   e.disconnect = () => {
     e.socket.removeListener('msg')
 
-    e.socket.close()
+    //e.socket.close()
 
-    e.closeConnection()
+    //e.closeConnection()
 
     return e
   }
