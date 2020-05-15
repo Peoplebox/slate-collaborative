@@ -13,6 +13,7 @@ import { withIOCollaboration, useCursor } from '@slate-collaborative/client'
 import { Instance, Title, H4, Button } from './Components'
 
 import EditorFrame from './EditorFrame'
+import io from 'socket.io-client'
 
 const defaultValue: Node[] = [
   {
@@ -70,7 +71,8 @@ const Client: React.FC<ClientProps> = ({ id, name, slug, removeUser }) => {
         }
       },
       onConnect: () => setOnlineState(true),
-      onDisconnect: () => setOnlineState(false)
+      onDisconnect: () => setOnlineState(false),
+      socket: io(`${origin}/${slug}`, { query: { name, token: id, slug } })
     }
 
     return withIOCollaboration(slateEditor, options)

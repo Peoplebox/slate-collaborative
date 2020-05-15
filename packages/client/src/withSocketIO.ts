@@ -54,18 +54,18 @@ const withSocketIO = <T extends AutomergeEditor>(
       //e.socket = io(url, { ...connectOpts })
       if (socket) {
         e.socket = socket
-        e.clientId = e.socket.id
-        e.openConnection()
-        onConnect && onConnect()
+        if (socket.id) {
+          e.clientId = e.socket.id
+          e.openConnection()
+          onConnect && onConnect()
+        } else {
+          e.socket.on('connect', () => {
+            e.clientId = e.socket.id
+            e.openConnection()
+            onConnect && onConnect()
+          })
+        }
       }
-
-      // e.socket.on('connect', () => {
-      //   e.clientId = e.socket.id
-
-      //   e.openConnection()
-
-      //   onConnect && onConnect()
-      // })
     }
 
     e.socket.on('msg', (data: CollabAction) => {
@@ -90,9 +90,9 @@ const withSocketIO = <T extends AutomergeEditor>(
   e.disconnect = () => {
     e.socket.removeListener('msg')
 
-    //e.socket.close()
+    // e.socket.close()
 
-    //e.closeConnection()
+    // e.closeConnection()
 
     return e
   }
